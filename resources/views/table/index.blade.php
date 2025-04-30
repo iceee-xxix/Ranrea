@@ -33,7 +33,7 @@
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">ชำระเงิน</h5>
+                <h5 class="modal-title">QR-code</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -47,6 +47,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="download" data-id="">ดาวน์โหลด</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
             </div>
         </div>
@@ -140,9 +141,44 @@
             },
             success: function(response) {
                 $('#modal-qr').modal('show')
+                $('#download').attr('data-id', id);
                 $('#body-html').html(response);
             }
         });
+    });
+
+    $(document).on('click', '#download', function(e) {
+        e.preventDefault();
+
+        const svgElement = document.querySelector('#body-html svg');
+        if (!svgElement) {
+            alert('QR code SVG not found!');
+            return;
+        }
+
+        const svgData = new XMLSerializer().serializeToString(svgElement);
+        const svgBlob = new Blob([svgData], {
+            type: 'image/svg+xml;charset=utf-8'
+        });
+        const url = URL.createObjectURL(svgBlob);
+
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            const pngFile = canvas.toDataURL('image/png');
+            const downloadLink = document.createElement('a');
+            downloadLink.download = 'qr_code.png';
+            downloadLink.href = pngFile;
+            downloadLink.click();
+
+            URL.revokeObjectURL(url);
+        };
+        img.src = url;
     });
 </script>
 @endsection
