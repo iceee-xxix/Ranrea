@@ -122,7 +122,7 @@ class Main extends Controller
                 $menuName = $orderDetails[0]->menu->name ?? 'ไม่ทราบชื่อเมนู';
 
                 $info .= '<div class="card shadow-sm mb-3">';
-                $info .= '<div class="card-header bg-primary text-white fw-bold">' . $menuName . '</div>';
+                $info .= '<div class="card-header bg-primary text-white fw-bold">ออเดอร์ #' . $orderId . '</div>';
                 $info .= '<div class="card-body">';
 
                 foreach ($orderDetails as $detail) {

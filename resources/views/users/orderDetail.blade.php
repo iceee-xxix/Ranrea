@@ -12,7 +12,7 @@ $config = Config::first();
 
 <style>
     .title-buy {
-        font-size: 32px;
+        font-size: 30px;
         font-weight: bold;
         color: <?= $config->color_font != '' ? $config->color_font : '#ffffff' ?>;
         margin-bottom: 1rem;
@@ -37,7 +37,7 @@ $config = Config::first();
 </style>
 
 <div class="container py-4">
-    <div class="title-buy text-center text-md-start">📋 รายละเอียดคำสั่งออเดอร์</div>
+    <div class="title-buy text-center">📋 รายละเอียดคำสั่งออเดอร์</div>
 
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white fw-bold">
