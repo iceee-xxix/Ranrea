@@ -7,11 +7,13 @@ use App\Http\Controllers\admin\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Categories;
 use App\Models\Menu;
+use App\Models\MenuOption;
 use App\Models\Orders;
 use App\Models\OrdersDetails;
 use App\Models\Promotion;
 use App\Models\Table;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class Main extends Controller
@@ -90,5 +92,64 @@ class Main extends Controller
     public function sendEmp()
     {
         event(new OrderCreated(['ลูกค้าเรียกจากโต้ะที่ ' . session('table_id')]));
+    }
+
+    public function orderDetail()
+    {
+        $orders = Orders::where('table_id', session('table_id') ?? 1)
+            ->whereIn('status', [1, 2])
+            ->get();
+        return view('users.orderDetail', compact('orders'));
+    }
+
+    public function listOrderDetailMain(Request $request)
+    {
+        $orderId = $request->input('id');
+        $orders = OrdersDetails::select('menu_id')
+            ->where('order_id', $orderId)
+            ->groupBy('menu_id')
+            ->get();
+
+        $info = '';
+
+        if ($orders->count() > 0) {
+            foreach ($orders as $value) {
+                $orderDetails = OrdersDetails::where('order_id', $orderId)
+                    ->where('menu_id', $value->menu_id)
+                    ->with('menu', 'option')
+                    ->get();
+
+                $menuName = $orderDetails[0]->menu->name ?? 'ไม่ทราบชื่อเมนู';
+
+                $info .= '<div class="card shadow-sm mb-3">';
+                $info .= '<div class="card-header bg-primary text-white fw-bold">' . $menuName . '</div>';
+                $info .= '<div class="card-body">';
+
+                foreach ($orderDetails as $detail) {
+                    $optionType = $detail->option->type ?? '-';
+                    $menuName = $detail->menu->name ?? '-';
+                    $quantity = $detail->quantity;
+                    $price = number_format($detail->price * $quantity, 2);
+
+                    $info .= '
+                    <div class="d-flex justify-content-between flex-wrap mb-2 border-bottom pb-1">
+                        <div>
+                            <div><strong>' . $menuName . '</strong> (' . $optionType . ')</div>
+                            <small class="text-muted">จำนวน: ' . $quantity . '</small>
+                        </div>
+                        <div class="text-end">
+                            <span class="text-success fw-bold">' . $price . ' บาท</span>
+                        </div>
+                    </div>
+                ';
+                }
+
+                $info .= '</div></div>';
+            }
+        } else {
+            $info .= '<div class="alert alert-warning text-center">ไม่พบรายการในออเดอร์นี้</div>';
+        }
+
+        echo $info;
     }
 }

@@ -23,8 +23,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [Main::class, 'index'])->name('index');
 Route::get('/order', [Main::class, 'order'])->name('order');
+Route::get('/orderDetail', [Main::class, 'orderDetail'])->name('orderDetail');
 Route::post('/sendEmp', [Main::class, 'sendEmp'])->name('sendEmp');
 Route::post('/sendorder', [Main::class, 'SendOrder'])->name('SendOrder');
+Route::post('/listOrderDetailMain', [Main::class, 'listOrderDetailMain'])->name('listOrderDetailMain');
 Route::get('/detail/{id}', [Main::class, 'detail'])->name('detail');
 Route::get('/detail', function () {
     return redirect()->route('index');

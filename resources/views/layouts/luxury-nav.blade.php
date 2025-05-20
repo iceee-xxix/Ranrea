@@ -122,6 +122,10 @@ $config = Config::first();
             <div class="icon"><i class="fas fa-receipt"></i></div> <!-- ✅ ใช้ icon แสดงคำสั่งซื้อ -->
             <div>คำสั่งซื้อ</div>
         </a>
+        <a href="{{route('orderDetail')}}" id="sendEmp">
+            <div class="icon"><i class="fa fa-list"></i></div> <!-- ✅ ไอคอนจาก Font Awesome -->
+            <div>รายละเอียด</div>
+        </a>
     </nav>
     <!-- ✅ Bootstrap 5.3.0 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
