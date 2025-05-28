@@ -13,6 +13,7 @@ use App\Models\Orders;
 use App\Models\OrdersDetails;
 use App\Models\Pay;
 use App\Models\PayGroup;
+use App\Models\Table;
 use BaconQrCode\Encoder\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -89,11 +90,12 @@ class Admin extends Controller
                 if ($rs->status != 3) {
                     $pay = '<button data-id="' . $rs->table_id . '" data-total="' . $rs->total . '" type="button" class="btn btn-sm btn-outline-success modalPay">ชำระเงิน</button>';
                 }
+                $table = Table::find($rs->table_id);
                 $flag_order = '<button class="btn btn-sm btn-success">สั่งหน้าร้าน</button>';
                 $action = '<button data-id="' . $rs->table_id . '" type="button" class="btn btn-sm btn-outline-primary modalShow m-1">รายละเอียด</button>' . $pay;
                 $info[] = [
                     'flag_order' => $flag_order,
-                    'table_id' => $rs->table_id,
+                    'table_id' => $table->table_number,
                     'total' => $rs->total,
                     'remark' => $rs->remark,
                     'status' => $status,
